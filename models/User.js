@@ -12,11 +12,20 @@ const userSchema = new mongoose.Schema(
         type:String,
         require:true,
         trim:true,
-      }  ,
+      },
       email:{
          type:String,
          required:true
       },
+      password:{
+        type:String,
+        required:true
+      },
+      confirmPassword:{
+        type:String,
+        required:true
+      },
+
       accountType:{
         type:String,
         enum:['Student','Instructor','Admin'],
@@ -36,12 +45,18 @@ const userSchema = new mongoose.Schema(
         type:String,
         required:true
       },
+      token:{
+        type:String
+      },
+      resetPasswordExpries:{
+        type:Date
+      },
       courseProgress:[
         {
           type:mongoose.Schema.Types.ObjectId,
          ref:"CourseProgress"
         }
-    ],
+    ]
       
     }
 )
