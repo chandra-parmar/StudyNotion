@@ -1,6 +1,6 @@
 const Profile = require('../models/Profile')
 const User = require('../models/User')
-
+const {uploadImageToCloudinary} = require('../utils/imageUploader')
 
 const updateProfile = async(req,res)=>{
     try{
@@ -108,7 +108,8 @@ const getAllUserDetails = async(req,res)=>{
         return res.status(200).json(
             {
                 success:true,
-                message:"User data fetched successfully"
+                message:"User data fetched successfully",
+                data: userDetails
             }
         )
 
