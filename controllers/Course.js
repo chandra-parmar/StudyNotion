@@ -8,13 +8,13 @@ const createCourse = async(req,res)=>{
     try
     {
         //fetch data
-        const {courseName,courseDescription,whatYouWillLearn,price,category } = req.body
+        const {courseName,courseDescription,whatYouWillLearn,price,category,status,instructions } = req.body
 
         //get thumbnail
         const thumbnail = req.files.thumbnailImage
 
         //validation
-        if(!courseName ||!courseDescription||!whatYouWillLearn||!price||!category)
+        if(!courseName ||!courseDescription||!whatYouWillLearn||!price||!category ||!thumbnail)
         {
            return res.status(400).json(
             {
@@ -22,6 +22,11 @@ const createCourse = async(req,res)=>{
                 message:"All fields are required"
             }
            ) 
+        }
+
+        if(!status || status ===undefined)
+        {
+            status ="Draft"
         }
 
         // checking  for instructor 
@@ -66,7 +71,9 @@ const createCourse = async(req,res)=>{
                 whatYouWillLearn:whatYouWillLearn,
                 price,
                 category:categoryDetails._id,
-                thumbnail:thumbnailImage.secure_url
+                thumbnail:thumbnailImage.secure_url,
+                status:status,
+                instructions:instructions
             }
         )
 
@@ -123,7 +130,14 @@ const createCourse = async(req,res)=>{
 //get all course 
 const getAllCourse = async(req,res)=>{
     try{
-       const allCourses= await Course.find({})
+       const allCourses= await Course.find({},{
+        courseName:true,
+        price:true,
+        thumbnail:true,
+        instructor:true,
+        ratingAndReviews:true,
+        studentEnrolled:true
+       }).populate('instructor').exec()
 
        return res.status(200).json(
         {
