@@ -127,3 +127,9 @@ const deleteSection = async(req,res)=>{
      )
     }
 }
+
+module.exports ={
+    createSection,
+    updateSection,
+    deleteSection
+}
