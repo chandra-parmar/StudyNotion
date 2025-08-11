@@ -69,7 +69,56 @@ const showAllCategory = async(req,res)=>{
     }
 }
 
+//category page details
+const categoryPageDetails = async(req,res)=>{
+    try{
+        //get category
+        const {categoryId} = req.body 
+        //get courses for specified categoryid
+        const selectedCategory = await Category.findById(categoryId).
+                                    populate('courses')
+                                    .exec()
+        //validation
+        if(!selectedCategory)
+        {
+            return res.status(404).josn(
+                {
+                    success:false,
+                    message:"Data not found"
+                }
+            )
+        }
+        //get courses for different category
+        const differentCategory = await Category.find({
+                _id:{$ne:categoryId}
+        }).populate('courses')
+        .exec()
+        
+          
+        //return response
+        return res.status(200).json(
+            {
+                success:true,
+                data:{
+                    selectedCategory,
+                    differentCategory
+                }
+            }
+        )
+    }catch(error)
+    {
+      console.log(error)
+      return res.status(500).json(
+        {
+            success:false,
+            message:error.message
+        }
+      )
+    }
+}
+
 module.exports ={
     createCategory,
-    showAllCategory 
+    showAllCategory,
+    categoryPageDetails
 }
