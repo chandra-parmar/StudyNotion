@@ -3,7 +3,7 @@ const Course = require('../models/Course')
 const User= require('../models/User')
 const mailSender = require('../utils/mailSender')
 const {courseEnrollmentEmail} = require('../mail/templates/courseEnrollmentEmail')
-
+require('dotenv').config()
 
 //capture payment 
 const capturePayment = async(req,res)=>{
@@ -124,7 +124,7 @@ const capturePayment = async(req,res)=>{
 //verify signature of razorpay and server
 const verifySignature = async(req,res)=>{
     
-        const webhookSecret= "12345678"
+        const webhookSecret= process.env.webhookSecret
         
         //from signature
         const signature = req.headers['x-razorpay-signature']
