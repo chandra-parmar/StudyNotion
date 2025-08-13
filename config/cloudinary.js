@@ -2,7 +2,7 @@ const cloudinary= require('cloudinary').v2
 
 const cloudinaryConnect =()=>{
     try{
-      cloudinary.connect(
+      cloudinary.config(
         {
             //configuration to upload media on cloudinary
             

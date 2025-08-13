@@ -2,7 +2,9 @@ const express = require('express')
 const router = express.Router()
 
 //import controller
-const {signUp,login,sendOTP,changePassword} = require('../controllers/Auth')
+
+const { sendOTP,signUp,login,changePassword } = require('../controllers/Auth')
+//const login,sendOTP,changePassword = require('../controllers/Auth')
 const {resetPasswordToken,resetPassword} = require('../controllers/ResetPassword')
 
 const {auth} = require('../middlewares/auth')

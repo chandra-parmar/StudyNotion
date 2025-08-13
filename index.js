@@ -5,7 +5,7 @@ const port = process.env.PORT
 const dbConnect = require('./config/database')
 const cookieParser = require('cookie-parser')
 const cors= require('cors')
-const cloudinaryConnect = require('./config/cloudinary')
+const  cloudinaryConnect  = require('./config/cloudinary')
 const dotenv = require('dotenv')
 const fileUpload = require('express-fileupload')
 
