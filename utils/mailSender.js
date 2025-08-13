@@ -31,3 +31,5 @@ const mailSender = async(email,title,body)=>{
         console.log(error.message)
     }
 }
+
+module.exports = mailSender 
