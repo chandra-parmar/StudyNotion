@@ -1,6 +1,7 @@
 const User = require('../models/User')
 const mailSender = require('../utils/mailSender')
-
+const crypto = require('crypto')
+const bcrypt = require('bcrypt')
 //reset password token
 const resetPasswordToken = async(req,res)=>{
     try
@@ -18,7 +19,7 @@ const resetPasswordToken = async(req,res)=>{
             })
         }
         //generat token
-        const token = crypto.randomUUID()
+        const token = crypto.randomBytes(20).toString('hex')
         //updating user by adding token and expiration time
         const updatedDetails = await User.findOneAndUpdate(
             {
@@ -32,10 +33,11 @@ const resetPasswordToken = async(req,res)=>{
                 new:true
             }
         )
+
         //url create
         const url = `http://localhost:3000/update-password/${token}`
         //send email containing the url
-        await mailSender(email,"password Reset link",`Password reset link:${url}`)
+        await mailSender(email,"password Reset link",`Password reset link:${url} .please click this url to reset your password`)
 
         return res.json(
             {
@@ -50,6 +52,7 @@ const resetPasswordToken = async(req,res)=>{
         console.log(error)
         return res.status(500).json(
             {
+                error:error.message,
                 success:false,
                 message:"Something went wrong while sending email"
             }
@@ -70,12 +73,12 @@ const resetPassword = async(req,res)=>{
              return res.status(401).json(
                 {
                     success:false,
-                    message:"password not matched"
+                    message:"password and confirm password not matched"
                 }
              )
         }
         //get userdetails from db using token
-        const userDetails= await user.findOne({token:token})
+        const userDetails= await User.findOne({token:token})
         // if no entry - invalid token
         if(!userDetails)
         {
@@ -87,9 +90,9 @@ const resetPassword = async(req,res)=>{
             )
         }
         //token time check
-        if(userDetails.resetPasswordTokenExpires<Date.now())
+        if(!(userDetails.resetPasswordExpries > Date.now()))
         {
-             return res.json(
+             return res.status(403).json(
                 {
                     success:false,
                     message:"Token is expired please regenerated your token"
