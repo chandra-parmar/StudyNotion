@@ -3,6 +3,7 @@ const OTP = require('../models/OTP')
 const otpgenerator = require('otp-generator')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const Profile = require('../models/Profile')
 require('dotenv').config()
 
 //send otp
@@ -87,7 +88,7 @@ const signUp = async(req,res)=>{
     
     password,
     confirmPassword,
-   contactNumber,
+   
     accountType,
      otp
    } = req.body
@@ -95,13 +96,16 @@ const signUp = async(req,res)=>{
 
 // data validation
    if(!firstname ||!lastname ||
-     !email || !password || !confirmPassword
+     !email || !password || !confirmPassword ||!accountType
     ||!otp)
     {
+      console.log(error)
       return res.status(400).json(
         {
+          
           success:false,
           message:"All fileds are required",
+        
           
         }
       )
@@ -136,7 +140,7 @@ const recentOtp = await OTP.find({email}).sort({createdAt:-1}).limit(1)
 console.log(recentOtp)
 
 //vaildate otp found or not
-if(recentOtp.length == 0)
+if(recentOtp.length === 0)
 {
    return res.status(400).json(
     {
@@ -147,7 +151,7 @@ if(recentOtp.length == 0)
 }
 
 //invalid otp
-else if (otp !==recentOtp.otp)
+else if (String(otp).trim()!==String(recentOtp[0].otp).trim())
 {
    return res.status(400).json(
     {
@@ -159,7 +163,7 @@ else if (otp !==recentOtp.otp)
 
 
 //hash password
-const hasedPassword = await bcrytp.hash(password,10)
+const hasedPassword = await bcrypt.hash(password,10)
 
 //enter in db
 const profileDetails = await Profile.create(
@@ -174,10 +178,10 @@ const profileDetails = await Profile.create(
 
  const user = await User.create(
   {
-    firstName,
-    lastName,
+    firstname,
+    lastname,
     email,
-    contactNumber,
+  
     password:hasedPassword,
     accountType,
     additionalDetails:profileDetails._id,
