@@ -37,7 +37,7 @@ const updateProfile = async(req,res)=>{
         {
             success:true,
             message:"Profile updated Successfully",
-            profileDetails
+            profile 
         }
       )
 
