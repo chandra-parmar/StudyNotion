@@ -1,6 +1,6 @@
 const Profile = require('../models/Profile')
 const User = require('../models/User')
-const {uploadImageToCloudinary} = require('../utils/imageUploader')
+
 
 const updateProfile = async(req,res)=>{
     try{
@@ -20,21 +20,20 @@ const updateProfile = async(req,res)=>{
       }
       //find profile
       const userDetails = await User.findById(id)
-      const profileId =  userDetails.additionalDetails
-      const profileDetails = await Profile.findById(profileId)
+      const profile = await Profile.findById(userDetails.additionalDetails)
 
       //update profile (coz already user exist)
-      profileDetails.dateOfBirth= dateOfBirth,
-      profileDetails.about= about
-      profileDetails.gender=gender
-      profileDetails.contactNumber=contactNumber
+      profile.dateOfBirth= dateOfBirth,
+      profile.about= about
+      profile.gender=gender
+      profile.contactNumber=contactNumber
 
       
       
       //object save
-      await profileDetails.save()
+      await profile.save()
 
-      return response.status(200).json(
+      return res.status(200).json(
         {
             success:true,
             message:"Profile updated Successfully",
@@ -44,6 +43,7 @@ const updateProfile = async(req,res)=>{
 
     }catch(error)
     {
+        console.log(error)
        return res.status(500).json(
         {
             success:false,
@@ -61,9 +61,9 @@ const deleteAccount = async(req,res)=>{
         //get id 
         const id = req.user.id
         
-        const userDetails = await User.findById(id)
+        const user = await User.findById({_id:id})
         //  validation
-        if(!userDetails)
+        if(!user)
         {
             return res.status(404).json({
                 success:false,
@@ -71,7 +71,7 @@ const deleteAccount = async(req,res)=>{
             })
         }
         // delete profile
-        await Profile.findByIdAndDelete({_id:userDetails.additionalDetails})
+        await Profile.findByIdAndDelete({_id:user.additionalDetails})
         //delete user
         await User.findByIdAndDelete({_id:id})
          
@@ -104,14 +104,53 @@ const getAllUserDetails = async(req,res)=>{
       
         //get user details 
         const allUserDetails = await User.findById(id).populate('additionalDetails').exec()
-
+        
+        console.log(allUserDetails)
         return res.status(200).json(
             {
                 success:true,
                 message:"User data fetched successfully",
-                data: userDetails
+                data:allUserDetails
             }
         )
+
+    }catch(error)
+    {
+        console.log(error)
+      return res.status(500).json(
+        {
+            success:false,
+            message:error.message
+        }
+      )
+    }
+}
+
+const getEnrolledCourses= async(req,res)=>{
+    try{
+    const userId = req.user.id
+    const userDetails = await User.findOne({
+        _id:userId 
+    }).populate('courses')
+    .exec()
+
+    if(!userDetails)
+    {
+        return res.status(400).json(
+            {
+                success:false,
+                message:`Could not find user with id :${userDetails}`,
+
+            }
+        )
+    }
+
+    return res.status(200).json(
+        {
+            success:true,
+            data:userDetails.courses 
+        }
+    )
 
     }catch(error)
     {
@@ -127,7 +166,8 @@ const getAllUserDetails = async(req,res)=>{
 module.exports ={
     updateProfile,
     deleteAccount,
-    getAllUserDetails
+    getAllUserDetails,
+    getEnrolledCourses
 
 
 
