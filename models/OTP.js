@@ -13,8 +13,8 @@ const otpSchema = new mongoose.Schema(
       },
       createdAt:{
            type:Date,
-           default:Date.now(),
-           expires:5*60
+           default:Date.now,
+           expires:60*20
       }
     }
 )
@@ -35,9 +35,16 @@ async function sendVerificationEmail(email,otp)
 
 //pre middleware before document save
 otpSchema.pre('save',async function(next){
+  console.log("New document saved to database")
+
+  //send email when a new document is created
+  if(this.isNew)
+  {
     await sendVerificationEmail(this.email,this.otp)
-    next()
+  }
+  next()
 })
 
+const OTP = mongoose.model('OTP',otpSchema)
 
-module.exports = mongoose.model('OTP',otpSchema)
+module.exports = OTP
