@@ -82,8 +82,8 @@ const sendOTP = async(req,res)=>{
 const signUp = async(req,res)=>{
   try{
 // data fetch from req body
-   const {firstname,
-    lastname,
+   const {firstName,
+    lastName,
     email,
     
     password,
@@ -95,11 +95,11 @@ const signUp = async(req,res)=>{
 
 
 // data validation
-   if(!firstname ||!lastname ||
+   if(!firstName ||!lastName ||
      !email || !password || !confirmPassword ||!accountType
     ||!otp)
     {
-      console.log(error)
+    
       return res.status(400).json(
         {
           
@@ -178,14 +178,14 @@ const profileDetails = await Profile.create(
 
  const user = await User.create(
   {
-    firstname,
-    lastname,
+    firstName,
+    lastName,
     email,
   
     password:hasedPassword,
     accountType,
     additionalDetails:profileDetails._id,
-     image:`https://api.dicebear.com/5.x.initials/svg?seed =${firstname} ${lastname}`
+     image:`https://api.dicebear.com/5.x.initials/svg?seed =${firstName} ${lastName}`
   }
  )
 
@@ -199,11 +199,14 @@ const profileDetails = await Profile.create(
  )
   }catch(error)
   {
-    console.log(error)
+    console.error("Signup error: ",error)
+
      return res.status(500).json(
       {
         success:false,
-        message:"user cannot be registered "
+        message:"User cannot be registered",
+        error:error.message,
+        stack:error.stack
       }
      )
   }
