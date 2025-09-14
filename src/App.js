@@ -7,6 +7,7 @@ import Signup from './pages/Signup'
 import Login from './pages/Login'
 import ForgotPassword from './pages/ForgotPassword'
 import VerifyEmail from './pages/VerifyEmail'
+import Contact from "./pages/Contact"
 
 function App()
 {
@@ -52,6 +53,8 @@ function App()
             </OpenRoute>
           }
         />
+
+          <Route path="/contact" element={<Contact />} />
 
       </Routes>
 
