@@ -10,13 +10,13 @@ import ConfirmationModal from '../../common/ConfirmationModel'
 
 const Sidebar = () => {
 
-    const {user, loading: profileLoading} = useSelector((state) => state.profile);
-    const {loading:authLoading} = useSelector((state)=>state.auth);
+    const {user, loading: authLoading} = useSelector((state) => state.auth);
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [confirmationModal, setConfirmationModal] = useState(null);
 
-    if(profileLoading || authLoading) {
+    if(authLoading) {
         return (
             <div className='mt-10'>
                 Loading...
