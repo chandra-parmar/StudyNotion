@@ -4,10 +4,12 @@ require('dotenv').config()
 //auth
 const auth = (req,res,next)=>{
           try{
+            console.log('Before taken extraction')
             //extract token 
             const token = req.cookies.token || req.body.token || 
-                           req.header("Authorization").replace('Bearer',"")
-
+                           req.header("Authorisation").replace('Bearer',"").trim()
+           
+            console.log('after token extraction')
            if(!token)
            {
               return res.status(401).json(
@@ -57,7 +59,7 @@ const isStudent = async(req,res,next)=>{
          {
             return res.status(401).json(
                 {
-                   success:true,
+                   success:false,
                    message:"This is protected route for Students only" 
                 }
             )
