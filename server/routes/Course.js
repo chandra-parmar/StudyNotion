@@ -29,7 +29,7 @@ const {
 //category controllers import
 const{
      createCategory,
-    showAllCategory,
+   showAllCategories,
     categoryPageDetails
 
 }= require('../controllers/Category')
@@ -45,7 +45,7 @@ const{
 
 //category routes only by admin
 router.post('/createCategory',auth,isAdmin,createCategory)
-router.get('/showAllCategory',showAllCategory)
+router.get('/showAllCategories',showAllCategories)
 router.post('/getCategoryPageDetails,',categoryPageDetails)
 
 //course routes 
