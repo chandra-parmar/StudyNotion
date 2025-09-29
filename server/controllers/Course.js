@@ -11,10 +11,10 @@ const createCourse = async(req,res)=>{
         const {courseName,courseDescription,whatYouWillLearn,price,category, status,instructions } = req.body
 
         //get thumbnail
-        const thumbnail = req.files.thumbnailImage
+       const thumbnail = req.files.courseImage
 
         //validation
-       /* if(!courseName ||!courseDescription||!whatYouWillLearn||!price||!category ||!thumbnail)
+        if(!courseName ||!courseDescription||!whatYouWillLearn||!price||!category ||!thumbnail)
         {
            return res.status(400).json(
             {
@@ -22,7 +22,7 @@ const createCourse = async(req,res)=>{
                 message:"All fields are required"
             }
            ) 
-        } */
+        } 
         let courseStatus = status
         if(!courseStatus || courseStatus ===undefined)
         {
@@ -93,7 +93,7 @@ const createCourse = async(req,res)=>{
             {_id:category},
             {
                 $push:{
-                   Category:newCourse._id
+                   courses:newCourse._id
                 }
             },
             {new:true}
