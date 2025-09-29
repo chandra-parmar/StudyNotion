@@ -47,7 +47,7 @@ const createCategory = async(req,res)=>{
 }
 
 //get all category
-const showAllCategory = async(req,res)=>{
+const showAllCategories = async(req,res)=>{
     try{
           const allCategory = await Category.find({},{name:true,description:true})
           return res.status(200).json(
@@ -119,6 +119,6 @@ const categoryPageDetails = async(req,res)=>{
 
 module.exports ={
     createCategory,
-    showAllCategory,
+   showAllCategories,
     categoryPageDetails
 }
