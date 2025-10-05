@@ -7,7 +7,7 @@ const auth = (req,res,next)=>{
             console.log('Before taken extraction')
             //extract token 
             const token = req.cookies.token || req.body.token || 
-                           req.header("Authorisation").replace('Bearer',"").trim()
+                           req.header("Authorization").replace('Bearer',"").trim()
            
             console.log('after token extraction')
            if(!token)
