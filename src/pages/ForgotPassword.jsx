@@ -1,8 +1,10 @@
 import { IoMdArrowBack } from "react-icons/io";
 import React from 'react'
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { getPasswordResetToken } from "../services/operations/authAPI";
+
 
 function ForgotPassword()
 {
@@ -11,10 +13,17 @@ function ForgotPassword()
     const [email,setEmail] = useState("")
 
     const {loading } = useSelector((state)=> state.auth)
+    const dispatch = useDispatch()
+
+    const handleOnSubmit=(e)=>{
+        e.preventDefault()
+        dispatch(getPasswordResetToken(email,setEmailSent))
+
+    }
 
 
 return(    
-        <div>
+        <div className="text-white flex justify-center items-center">
         {
            loading ? (    <div>Loading...</div>  )   :
            
@@ -35,7 +44,7 @@ return(
                     } 
                 </p>
 
-                <form>
+                <form onSubmit={handleOnSubmit}>
                 {
                       !emailSent && (
                         <label>
@@ -52,7 +61,7 @@ return(
 
                       )
                 }
-                <button>
+                <button type="submit">
                     {
                         !emailSent ? "Reset Password" :"Resend Email"
                     }
