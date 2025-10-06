@@ -1,7 +1,7 @@
 import React from "react";
 import { VscSignOut } from "react-icons/vsc";
 
-const ConfirmationModal = ({ modalData }) => {
+const ConfirmationModel = ({ modalData }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-richblack-800 p-6 rounded-md w-[350px] text-white">
@@ -33,4 +33,4 @@ const ConfirmationModal = ({ modalData }) => {
   );
 };
 
-export default ConfirmationModal;
+export default ConfirmationModel;
