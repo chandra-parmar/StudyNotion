@@ -70,14 +70,16 @@ export const fetchCourseCategories = async () => {
   let result = []
   try {
     const response = await apiConnector("GET", COURSE_CATEGORIES_API)
+    console.log("Api url:",COURSE_CATEGORIES_API)
     console.log("COURSE_CATEGORIES_API API RESPONSE............", response)
     if (!response?.data?.success) {
       throw new Error("Could Not Fetch Course Categories")
     }
-    result = response?.data?.allCategory
+    result = response?.data?.data
   } catch (error) {
     console.log("COURSE_CATEGORY_API API ERROR............", error)
     toast.error(error.message)
+    
   }
   return result
 }
@@ -269,7 +271,7 @@ export const fetchInstructorCourses = async (token) => {
       GET_ALL_INSTRUCTOR_COURSES_API,
       null,
       {
-        Authorisation: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       }
     )
     console.log("INSTRUCTOR COURSES API RESPONSE............", response)
@@ -290,7 +292,7 @@ export const deleteCourse = async (data, token) => {
   const toastId = toast.loading("Loading...")
   try {
     const response = await apiConnector("DELETE", DELETE_COURSE_API, data, {
-      Authorisation: `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
     })
     console.log("DELETE COURSE API RESPONSE............", response)
     if (!response?.data?.success) {
@@ -317,7 +319,7 @@ export const getFullDetailsOfCourse = async (courseId, token) => {
         courseId,
       },
       {
-        Authorisation: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       }
     )
     console.log("COURSE_FULL_DETAILS_API API RESPONSE............", response)
@@ -343,7 +345,7 @@ export const markLectureAsComplete = async (data, token) => {
   const toastId = toast.loading("Loading...")
   try {
     const response = await apiConnector("POST", LECTURE_COMPLETION_API, data, {
-      Authorisation: `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
     })
     console.log(
       "MARK_LECTURE_AS_COMPLETE_API API RESPONSE............",
@@ -370,7 +372,7 @@ export const createRating = async (data, token) => {
   let success = false
   try {
     const response = await apiConnector("POST", CREATE_RATING_API, data, {
-      Authorisation: `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
     })
     console.log("CREATE RATING API RESPONSE............", response)
     if (!response?.data?.success) {
