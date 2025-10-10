@@ -7,7 +7,7 @@ const cookieParser = require('cookie-parser')
 const cors= require('cors')
 const  cloudinaryConnect  = require('./config/cloudinary')
 const dotenv = require('dotenv')
-const fileUpload = require('express-fileupload')
+const fileUpload = require("express-fileupload")
 
 const userRoutes = require('./routes/User')
 const profileRoutes = require('./routes/Profile')
@@ -19,10 +19,6 @@ const paymentRoutes = require('./routes/Payment')
 
 //database connect
 dbConnect()
-
-//middlewares
-app.use(express.json())
-app.use(cookieParser())
 app.use(
     cors({
         //frontend url 
@@ -30,6 +26,10 @@ app.use(
         credentials:true 
     })
 )
+//middlewares
+app.use(express.json())
+app.use(cookieParser())
+
 app.use(fileUpload({
    useTempFiles: true,
   tempFileDir: "/tmp/"
