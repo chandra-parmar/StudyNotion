@@ -138,7 +138,7 @@ const CourseBuilderForm =()=>{
                         <button
                          type='button'
                          onClick={cancelEdit}
-                         className='text-sm text-richblack-300 underline ml-[10px]'>
+                         className='text-sm  text-white underline ml-[10px]'>
 
                             cancel edit
                         </button>
