@@ -13,14 +13,26 @@ export default function Upload({
   setValue,
   errors,
   video = false,
-  viewData = null,
-  editData = null,
+  viewData = null,   // e.g. just a string URL when viewing
+  editData = null,   // e.g. whole subsection object when editing
 }) {
   const { course } = useSelector((state) => state.course)
   const [selectedFile, setSelectedFile] = useState(null)
-  const [previewSource, setPreviewSource] = useState(
-    viewData ? viewData : editData ? editData : ""
-  )
+
+  // Safely extract the initial preview URL (handles string or object with .url or .lectureVideo)
+  const getInitialPreview = () => {
+    if (viewData) {
+      return typeof viewData === "string" ? viewData : viewData?.url || ""
+    }
+    if (editData) {
+      return typeof editData === "string"
+        ? editData
+        : editData?.url || editData?.lectureVideo?.url || editData?.lectureVideo || ""
+    }
+    return ""
+  }
+
+  const [previewSource, setPreviewSource] = useState(getInitialPreview())
   const inputRef = useRef(null)
 
   const onDrop = (acceptedFiles) => {
@@ -36,10 +48,11 @@ export default function Upload({
       ? { "image/*": [".jpeg", ".jpg", ".png"] }
       : { "video/*": [".mp4"] },
     onDrop,
+    // Prevent file dialog when in view mode
+    disabled: !!viewData,
   })
 
   const previewFile = (file) => {
-    // console.log(file)
     const reader = new FileReader()
     reader.readAsDataURL(file)
     reader.onloadend = () => {
@@ -47,26 +60,39 @@ export default function Upload({
     }
   }
 
+  // Register the field
   useEffect(() => {
     register(name, { required: true })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [register])
+  }, [register, name])
 
+  // Update form value when file changes
   useEffect(() => {
     setValue(name, selectedFile)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedFile, setValue])
+  }, [selectedFile, setValue, name])
+
+  // When user clicks "Cancel" / Remove
+  const handleRemove = () => {
+    setSelectedFile(null)
+    setPreviewSource("")
+    setValue(name, null)
+  }
 
   return (
     <div className="flex flex-col space-y-2">
       <label className="text-sm text-richblack-5" htmlFor={name}>
         {label} {!viewData && <sup className="text-pink-200">*</sup>}
       </label>
+
       <div
+        {...(viewData ? {} : getRootProps())}
         className={`${
           isDragActive ? "bg-richblack-600" : "bg-richblack-700"
-        } flex min-h-[250px] cursor-pointer items-center justify-center rounded-md border-2 border-dotted border-richblack-500`}
+        } flex min-h-[250px] cursor-pointer items-center justify-center rounded-md border-2 border-dotted border-richblack-500 ${
+          viewData ? "cursor-default" : ""
+        }`}
       >
+        <input {...getInputProps()} ref={inputRef} />
+
         {previewSource ? (
           <div className="flex w-full flex-col p-6">
             {!video ? (
@@ -78,41 +104,36 @@ export default function Upload({
             ) : (
               <Player aspectRatio="16:9" playsInline src={previewSource} />
             )}
+
+            {/* Show Remove button only when not in view-only mode */}
             {!viewData && (
               <button
                 type="button"
-                onClick={() => {
-                  setPreviewSource("")
-                  setSelectedFile(null)
-                  setValue(name, null)
-                }}
+                onClick={handleRemove}
                 className="mt-3 text-richblack-400 underline"
               >
-                Cancel
+                Remove
               </button>
             )}
           </div>
         ) : (
-          <div
-            className="flex w-full flex-col items-center p-6"
-            {...getRootProps()}
-          >
-            <input {...getInputProps()} ref={inputRef} />
+          <div className="flex w-full flex-col items-center space-y-6 p-6">
             <div className="grid aspect-square w-14 place-items-center rounded-full bg-pure-greys-800">
               <FiUploadCloud className="text-2xl text-yellow-50" />
             </div>
-            <p className="mt-2 max-w-[200px] text-center text-sm text-richblack-200">
+            <p className="max-w-[200px] text-center text-sm text-richblack-200">
               Drag and drop an {!video ? "image" : "video"}, or click to{" "}
-              <span className="font-semibold text-yellow-50">Browse</span> a
-              file
+              <span className="font-semibold text-yellow-50">Browse</span> a file
             </p>
-            <ul className="mt-10 flex list-disc justify-between space-x-12 text-center  text-xs text-richblack-200">
+            <ul className="flex list-disc flex-wrap justify-center gap-x-10 text-xs text-richblack-200">
               <li>Aspect ratio 16:9</li>
               <li>Recommended size 1024x576</li>
             </ul>
           </div>
         )}
       </div>
+
+      {/* Error message */}
       {errors[name] && (
         <span className="ml-2 text-xs tracking-wide text-pink-200">
           {label} is required
