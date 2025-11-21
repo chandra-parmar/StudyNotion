@@ -1,171 +1,166 @@
-import React, { useState } from 'react'
-import { useForm } from 'react-hook-form'
+import React from 'react'
+import {useForm} from 'react-hook-form'
 import IconBtn from '../../../../common/IconBtn'
-import { CiCirclePlus } from "react-icons/ci";
-import { useDispatch, useSelector } from 'react-redux';
-import { MdNavigateNext } from "react-icons/md";
-import { createSection,updateSection,deleteSection } from '../../../../../services/operations/courseDetailsAPI';
-import toast from 'react-hot-toast';
-import NestedView from './NestedView';
-import { setCourse } from '../../../../../slices/courseSlice';
-import { setStep } from '../../../../../slices/courseSlice';
-import { setEditCourse } from '../../../../../slices/courseSlice';
-import { data } from 'react-router-dom';
-
+import {BiAddToQueue} from 'react-icons/bi'
+import { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import NestedView from './NestedView'
+import { updateSection,createSection } from '../../../../../services/operations/courseDetailsAPI'
+import { data } from 'react-router-dom'
+import { setStep } from '../../../../../slices/courseSlice'
+import { setCourse } from '../../../../../slices/courseSlice'
+import toast from 'react-hot-toast'
+import { setEditCourse } from '../../../../../slices/courseSlice'
+import { MdNavigateNext } from "react-icons/md"
 const CourseBuilderForm =()=>{
 
-    const {register, handleSubmit, setValue, formState:{errors}} = useForm()
-    
-    //flag for edit section button and create section btn
+    const {register,handleSubmit,setValue,formState:{errors}} = useForm()
     const [editSectionName,setEditSectionName] = useState(null)
     const {course} = useSelector((state)=> state.course)
     const dispatch= useDispatch()
     const [loading,setLoading] = useState(false)
-   const {token} = useSelector((state)=> state.auth)
+    const {token} = useSelector((state)=> state.auth)
 
-    //form on submit function
-    const onSubmit=async(data)=>{
-       setLoading(true)
-       let result
-       //either edit or create
-       if(editSectionName)
-       {
-         // update section api call
-         result = await updateSection(
+    //form submit
+    const onSubmit = async (data)=>{
+     setLoading(true)
+     let result
+
+     if(editSectionName)
+     {
+        //editing the section name
+        result = await updateSection(
             {
                 sectionName:data.sectionName,
-                sectionId: editSectionName,
-                courseId:course._id
-            },token
-         )
+                sectionId:editSectionName,
+                courseId:course._id,
 
-       }
-       //create section button
-       else{
-          result = await createSection({
+            },token
+        )
+     }
+     else{
+        result = await createSection({
             sectionName: data.sectionName,
             courseId:course._id,
 
-          },token)
+        },token)
+     }
 
-       }
+     //update values
+     if(result)
+     {
+        dispatch(setCourse(result))
+        setEditSectionName(null)
+        setValue("sectionName","")
 
-       //update values
-       if(result)
-       {
-         dispatch(setCourse(result))
-         setEditSectionName(null)
-         setValue('sectionName',"")
-       }
-       //loading false
-       setLoading(false)
+     }
+     //loading false
+     setLoading(false)
 
     }
 
-    const cancelEdit =()=>{
+    {/* cancel edit function */}
+    const cancelEdit= ()=>{
         setEditSectionName(null)
         setValue("sectionName","")
     }
-
-    {/** go back  function */}
+    {/** go back function */}
     const goBack =()=>{
-      dispatch(setStep(1))
-      dispatch(setEditCourse(true))
+        dispatch(setStep(1))
+        dispatch(setEditCourse(true))
     }
-    
-    {/** go to next */}
-    const goToNext=()=>{
-        // only go to next step when atleast 1 section is created
-        if(course.courseContent.length ===0)
-        {
-            toast.error("Please add atleast one Section")
-            return
-        }
-        if(course.courseContent.some((section)=> section.subSection.length ===0))
-        {
-            toast.error("please add alteast one lecture in each section")
-            return
-        }
 
+    {/** go to next  */}
+    const goToNext=()=>{
+        //atleast one section is created
+        if(course.courseContent.length==0)
+        {
+            toast.error("please add atleast one section")
+            
+            return
+
+        }
+        //check for subSection
+        // if(course.courseContent.some((section)=> section.subSection.length ===0))
+        // {
+        //     toast.error("please add atleast one lecture in each section")
+        //     return
+        // }
+
+        //move to next step
         dispatch(setStep(3))
+
     }
 
     const handleChangeEditSectionName = (sectionId,sectionName)=>{
-        if(editSectionName === sectionId)
-        {
+          if(editSectionName === sectionId)
+          {
             cancelEdit()
-            return 
-        }
-        setEditSectionName(sectionId)
-        setValue("sectionName",sectionName)
+            return
+          }
+          setEditSectionName(sectionId)
+          setValue("sectionName",sectionName)
 
     }
 
 
-    return(
+    return (
         <div className='text-white'>
-            <h2>Course Builder</h2>
-            <form onSubmit={handleSubmit(onSubmit)}>
+           <p>Course Builder</p>
+           <form onSubmit={handleSubmit(onSubmit)}>
+            <div>
+                <label htmlFor='sectionName'>Section name<sup>*</sup></label>
+                <input
+                 id='sectionName'
+                 placeholder='add section name'
+                 {...register("sectionName",{required:true})}
+                 className='w-full'>
+
+                </input>
+                {errors.sectionName &&(
+                    <span>Section name is required</span>
+                )}
                 
-                {/** label */}
-                <div>
-                    <label htmlFor='sectionName'>Section name<sup>*</sup></label>
-                    <input
-                     id='sectionName'
-                     placeholder='add a section name'
-                     {...register('sectionName',{required:true})}
-                      className='w-full'></input>
-                     {
-                        errors.sectionName && (
-                            <span>Section name is required</span>
-                        )
-                     }
-                </div>
+            </div>
 
-                {/*create section button*/}
-                <div className='mt-[10px] flex w-full'>
-                    <IconBtn
-                     type="Submit"
-                     text={editSectionName ? "Edit Section Name " :"create section" }
-                     outline={true}
-                     customClasses={"text-white"}
-                     >
-                     <CiCirclePlus className='text-white size={20}' />
+            {/** create section button */}
+            <div className='mt-10 flex '>
+             <IconBtn
+             type="Submit"
+             text={editSectionName? "Edit Section Name":"Create Section"}
+             outline={true}
+             customClasses={"text-white"}>
+              <BiAddToQueue className='text-yellow' size={20}></BiAddToQueue>
+             </IconBtn>
 
-                    </IconBtn>
-                    {/** cancel edit button */}
-                    {editSectionName && (
-                        <button
-                         type='button'
-                         onClick={cancelEdit}
-                         className='text-sm  text-white underline ml-[10px]'>
-
-                            cancel edit
-                        </button>
-                    )}
-                </div>
-            </form>
-
-              {/** nested view component */}
-              {course.courseContent.length > 0 && (
-                <NestedView handleChangeEditSectionName={handleChangeEditSectionName}></NestedView>
-              )}
-
-              {/** back and next button */}
-              <div className='flex justify-end gap-x-3'>
+             {/** editSection name */}
+             {editSectionName && (
                 <button
-                 onClick={goBack}
-                 className='rounded-md cursor-pointer flex items-center'>
-                    Back
-                </button>
+                  type='button'
+                  onClick={cancelEdit}
+                  className='text-sm text-richblack-300 underline'>
+                  Cancel Edit 
 
-                <IconBtn text="Next" onClick={goToNext}
-                >
-                <MdNavigateNext />
+                </button>  
+                )}        
 
-                </IconBtn>
-              </div>
-                
+            </div>
+            
+           </form>
+
+           {course.courseContent.length >0 && (
+            <NestedView handleChangeEditSectionName={handleChangeEditSectionName}></NestedView>
+           )}
+
+          {/** back and next button */}
+           <div className='flex justify-end gap-x-3'>
+              <button onClick={goBack}
+               className='rounded-md cursor-pointer flex items-center'>
+                Back
+              </button>
+             
+             <button onClick={goToNext}>Next</button>
+           </div>
         </div>
     )
 }
