@@ -152,27 +152,29 @@ export const createSection = async (data, token) => {
   return result
 }
 
-// create a subsection
+//create subsection 
 export const createSubSection = async (data, token) => {
-  let result = null
-  const toastId = toast.loading("Loading...")
+  let result = null;
+  const toastId = toast.loading("Loading...");
   try {
     const response = await apiConnector("POST", CREATE_SUBSECTION_API, data, {
-      Authorization: `Bearer ${token}`,
-    })
-    console.log("CREATE SUB-SECTION API RESPONSE............", response)
+      "Content-Type": "multipart/form-data",   // ✅ this line is critical
+      Authorization: `Bearer ${token}`,        // ✅ correct header key
+    });
+    console.log("CREATE SUB-SECTION API RESPONSE............", response);
     if (!response?.data?.success) {
-      throw new Error("Could Not Add Lecture")
+      throw new Error("Could Not Add Lecture");
     }
-    toast.success("Lecture Added")
-    result = response?.data?.data
+    toast.success("Lecture Added");
+    result = response?.data?.data;
   } catch (error) {
-    console.log("CREATE SUB-SECTION API ERROR............", error)
-    toast.error(error.message)
+    console.log("CREATE SUB-SECTION API ERROR............", error);
+    toast.error(error.message);
   }
-  toast.dismiss(toastId)
-  return result
-}
+  toast.dismiss(toastId);
+  return result;
+};
+
 
 
 
