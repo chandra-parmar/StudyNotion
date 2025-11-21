@@ -5,7 +5,11 @@ const router = express.Router()
 const {
      createCourse,
     getAllCourse,
-    getCourseDetails
+    getCourseDetails,
+    getFullCourseDetails,
+    editCourse,
+    getInstructorCourses,
+    deleteCourse
 } = require('../controllers/Course')
 
 //middlewares import
@@ -52,6 +56,15 @@ router.post('/getCategoryPageDetails,',categoryPageDetails)
 router.post('/createCourse',auth, isInstructor,createCourse)
 router.get('/getAllCourses',getAllCourse)
 router.post('/getCourseDetails',getCourseDetails)
+// Edit Course routes
+router.post("/editCourse", auth, isInstructor, editCourse)
+// Get all Courses Under a Specific Instructor
+router.get("/getInstructorCourses", auth, isInstructor, getInstructorCourses)
+// Delete a Course
+router.delete("/deleteCourse", deleteCourse)
+// Get Details for a Specific Courses
+router.post("/getFullCourseDetails", auth, getFullCourseDetails)
+
 
 //section routes only by instructor
 router.post('/addSection',auth,isInstructor,createSection)
