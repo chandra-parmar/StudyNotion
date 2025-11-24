@@ -50,7 +50,7 @@ const{
 //category routes only by admin
 router.post('/createCategory',auth,isAdmin,createCategory)
 router.get('/showAllCategories',showAllCategories)
-router.post('/getCategoryPageDetails,',categoryPageDetails)
+router.post('/getCategoryPageDetails',categoryPageDetails)
 
 //course routes 
 router.post('/createCourse',auth, isInstructor,createCourse)
