@@ -37,10 +37,10 @@ const userSchema = new mongoose.Schema(
         required:true
 
       },
-      courses:{
+      courses:[{
         type:mongoose.Schema.Types.ObjectId,
         ref:"Course"
-      },
+      }],
       image:{
         type:String,
         required:true
