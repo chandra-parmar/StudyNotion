@@ -316,7 +316,7 @@ export const deleteCourse = async (data, token) => {
     console.log("DELETE COURSE API ERROR............", error)
     toast.error(error.message)
   }
-  toast.dismiss(toastId)
+  toast.dismiss(toastId) 
 }
 
 // get full details of a course
@@ -350,6 +350,7 @@ export const getFullDetailsOfCourse = async (courseId, token) => {
   //   dispatch(setLoading(false));
   return result
 }
+
 
 // mark a lecture as complete
 export const markLectureAsComplete = async (data, token) => {
