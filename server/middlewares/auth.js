@@ -19,6 +19,8 @@ const auth = (req,res,next)=>{
                 }
               )
            }
+
+           console.log("auth middleware hit")
                 
             //token verify
             try{
@@ -55,6 +57,7 @@ const auth = (req,res,next)=>{
 //isStudent
 const isStudent = async(req,res,next)=>{
     try{
+        console.log("is student middleware hit")
          if(req.user.accountType !== 'Student')
          {
             return res.status(401).json(
