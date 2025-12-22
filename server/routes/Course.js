@@ -45,6 +45,10 @@ const{
     getAllRating
 } = require('../controllers/RatingAndReview')
 
+const{
+    updateCourseProgress
+} = require('../controllers/courseProgress')
+
 
 
 //category routes only by admin
@@ -65,6 +69,8 @@ router.delete("/deleteCourse", deleteCourse)
 // Get Details for a Specific Courses
 router.post("/getFullCourseDetails", auth, getFullCourseDetails)
 
+router.post('/updateCourseProgress',auth,isStudent,updateCourseProgress)
+
 
 //section routes only by instructor
 router.post('/addSection',auth,isInstructor,createSection)
@@ -82,6 +88,9 @@ router.delete('/deleteSubSection',auth,isInstructor,deleteSubSection)
 router.post('/createRating',auth,isStudent,createRating)
 router.get('/getAverageRating',auth,getAverageRating)
 router.get('/getReviews',getAllRating)
+
+
+
 
 
 module.exports = router
