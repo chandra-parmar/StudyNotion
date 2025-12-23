@@ -161,9 +161,10 @@ const CourseDetails = () => {
                 <span>{`${studentsEnrolled.length} students enrolled`}</span>
               </div>
               <div>
+              {/*
                 <p className="">
                   Created By {`${instructor.firstName} ${instructor.lastName}`}
-                </p>
+                </p>  */}
               </div>
               <div className="flex flex-wrap gap-5 text-lg">
                 <p className="flex items-center gap-2">
@@ -243,7 +244,7 @@ const CourseDetails = () => {
       </div>       
         
         
-          {/* Author Details */}
+          {/* Author Details 
             <div className="mb-12 py-4">
               <p className="text-[28px] font-semibold">Author</p>
               <div className="flex items-center gap-4 py-4">
@@ -262,6 +263,7 @@ const CourseDetails = () => {
                 {instructor?.additionalDetails?.about}
               </p>
             </div>
+            */}
 
             <Footer></Footer>
 
