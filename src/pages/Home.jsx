@@ -7,6 +7,7 @@ import Banner from '../assets/Images/banner.mp4'
 import CodeBlocks from '../components/core/HomePage/CodeBlocks';
 import LearnLanguageSection from '../components/core/HomePage/LearnLanguageSection';
 import Footer from '../components/common/Footer';
+import ReviewSlider from '../components/common/ReviewSlider';
 function Home()
 {
     return(
@@ -152,6 +153,7 @@ function Home()
              <h2 className='text-center tex-4xl font-semibold mt-10'>Review from other learners</h2>
              
              {/** Todo: review slider  */}
+             <ReviewSlider></ReviewSlider>
              
            </div>
 
