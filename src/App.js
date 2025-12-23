@@ -86,12 +86,14 @@ function App()
           }>
           <Route path ='my-profile' element={<MyProfile></MyProfile>}></Route>
           <Route path='settings' element={<Settings></Settings>}></Route>
-
+         
           {
             user?.accountType === ACCOUNT_TYPE.STUDENT && (
               <>
                  <Route path='enrolled-courses' element={<EnrolledCourses></EnrolledCourses>}></Route>
                  <Route path='cart' element={<Cart></Cart>}></Route>
+                  
+
               </>
             )
           }
