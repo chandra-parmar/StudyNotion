@@ -1,5 +1,6 @@
 
 const SubSection = require('../models/SubSection')
+const CourseProgress = require('../models/CourseProgress')
 
 
 async function updateCourseProgress(req,res)
@@ -48,6 +49,12 @@ async function updateCourseProgress(req,res)
             }
              await courseProgress.save()
 
+             return res.status(200).json({
+                 success:true,
+                 message:'course progress updated successfully',
+                 
+             })
+
 
 
       }catch(error)
@@ -62,4 +69,4 @@ async function updateCourseProgress(req,res)
       }
 }
 
-module.exports = updateCourseProgress
+module.exports ={ updateCourseProgress }
