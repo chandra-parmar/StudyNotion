@@ -48,6 +48,11 @@ export async function buyCourse(token, courses, userDetails, navigate, dispatch)
 
         // ✔ order object
         const order = orderResponse.data.order
+
+        if(!order || !order.currency || !order.amount ||!order.id)
+        {
+            throw new Error(orderResponse.data.message || "order creation failed")
+        }
         console.log("ORDER:", order)
 
         // 2️⃣ Razorpay checkout configuration
