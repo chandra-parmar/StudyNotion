@@ -3,47 +3,48 @@ import { createSlice } from "@reduxjs/toolkit";
 // Load token + user from localStorage when app starts
 const token = localStorage.getItem("token")
   ? JSON.parse(localStorage.getItem("token"))
-  : null
+  : null;
 
 const user = localStorage.getItem("user")
   ? JSON.parse(localStorage.getItem("user"))
-  : null
+  : null;
 
 const initialState = {
   signupData: null,
   loading: false,
   token: token,
-  user: user,   // ✅ restore user on refresh
-}
+  user: user, // ✅ restore user on refresh
+};
 
 const authSlice = createSlice({
   name: "auth",
   initialState: initialState,
   reducers: {
-    setSignupData(state, value) {
-      state.signupData = value.payload
+    setSignupData(state, action) {
+      state.signupData = action.payload;
     },
-    setLoading(state, value) {
-      state.loading = value.payload
+    setLoading(state, action) {
+      state.loading = action.payload;
     },
-    setToken(state, value) {
-      state.token = value.payload
-      localStorage.setItem("token", JSON.stringify(value.payload)) // keep in sync
+    setToken(state, action) {
+      state.token = action.payload;
+      localStorage.setItem("token", JSON.stringify(action.payload)); // keep in sync
     },
-    setUser(state, value) {   // ✅ add this reducer
-      state.user = value.payload
-      localStorage.setItem("user", JSON.stringify(value.payload)) // keep in sync
+    setUser(state, action) {
+      state.user = action.payload;
+      localStorage.setItem("user", JSON.stringify(action.payload)); // keep in sync
     },
-    logout(state) {   // ✅ clear everything when logging out
-      state.token = null
-      state.user = null
-      localStorage.removeItem("token")
-      localStorage.removeItem("user")
+    logout(state) {
+      state.token = null;
+      state.user = null;
+      state.signupData = null; // optional: clear signup data too
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
     },
   },
-})
+});
 
 export const { setSignupData, setLoading, setToken, setUser, logout } =
-  authSlice.actions
+  authSlice.actions;
 
-export default authSlice.reducer
+export default authSlice.reducer;
