@@ -16,12 +16,8 @@ const Sidebar = () => {
     const navigate = useNavigate();
     const [confirmationModal, setConfirmationModal] = useState(null);
 
-    if(authLoading) {
-        return (
-            <div className='mt-10'>
-                Loading...
-            </div>
-        )
+    if(authLoading || !user) {
+        return null
     }
 
   return (
