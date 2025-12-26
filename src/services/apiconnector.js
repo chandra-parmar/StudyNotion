@@ -1,11 +1,18 @@
 import axios from "axios";
 
 export const axiosInstance = axios.create({
-  baseURL: process.env.REACT_APP_BASE_URL, // optional but recommended
+  baseURL: process.env.REACT_APP_BASE_URL,
+  // optional but recommended
   withCredentials: true, // if you also use cookies
 });
 
-export const apiConnector = async (method, url, bodyData = null, headers = {}, params = null) => {
+export const apiConnector = async (
+  method,
+  url,
+  bodyData = null,
+  headers = {},
+  params = null
+) => {
   try {
     const response = await axiosInstance({
       method,
@@ -17,6 +24,7 @@ export const apiConnector = async (method, url, bodyData = null, headers = {}, p
       },
       params,
     });
+
     return response;
   } catch (error) {
     console.error("API CONNECTOR ERROR:", error);
