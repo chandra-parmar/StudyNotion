@@ -64,3 +64,28 @@ export async function getUserEnrolledCourses(token) {
   toast.dismiss(toastId)
   return result
 }
+
+export async function getInstructorData(token)
+{
+   const toastId = toast.loading('loading...')
+   let result =[]
+   try{
+   
+    const response = await apiConnector('GET','/profile/instructorDashboard',null,
+
+    {
+      Authorization:`Bearer ${token}`
+    })
+    console.log("Get instructor api response",response)
+    result = response?.data?.courses
+
+
+
+   }catch(error)
+   {
+    console.log("GET_INSTRUCTOR_API ERROR",error)
+    toast.error("Could not get instrcutor data")
+   }
+   toast.dismiss(toastId)
+   return result 
+}
