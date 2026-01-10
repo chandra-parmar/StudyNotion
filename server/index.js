@@ -20,12 +20,16 @@ const contactRoutes = require('./routes/Contact')
 //database connect
 dbConnect()
 app.use(
-    cors({
-        //frontend url 
-        origin:"http://localhost:3000",
-        credentials:true 
-    })
-)
+  cors({
+    origin: [
+      "http://localhost:3000",
+      "http://localhost:5173",
+      "https://study-notion-frontend-hazel-one.vercel.app",
+    ],
+    credentials: true,
+  })
+);
+
 //middlewares
 app.use(express.json())
 app.use(cookieParser())
