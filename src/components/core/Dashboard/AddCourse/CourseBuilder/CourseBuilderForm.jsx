@@ -73,7 +73,7 @@ const CourseBuilderForm =()=>{
     {/** go to next  */}
     const goToNext=()=>{
         //atleast one section is created
-        if(course.courseContent.length==0)
+        if(course.courseContent.length===0)
         {
             toast.error("please add atleast one section")
             
